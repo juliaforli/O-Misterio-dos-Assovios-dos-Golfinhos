@@ -181,6 +181,26 @@ function drawInicio() {
   fill(0); text("Ranking", width/2, y4 + h/2);
 }
 
+// Desenhar a Logo no canto inferior esquerdo
+  if (imgLogoLab) { // Verifica se a imagem foi carregada
+    let logoW = 100; // Largura desejada para a logo
+    let logoH = imgLogoLab.height * (logoW / imgLogoLab.width); // Calcula altura proporcional
+    let logoX = 20; // Margem esquerda
+    let logoY = height - logoH - 20; // Margem inferior
+    image(imgLogoLab, logoX, logoY, logoW, logoH);
+  }
+
+  // Desenhar os Créditos no canto inferior direito
+  push(); // Salva o estado atual (alinhamento, tamanho da fonte)
+  fill(0); // Cor preta para o texto
+  textSize(8); // Tamanho bem pequeno para ser discreto
+  textAlign(RIGHT, BOTTOM); // Alinha à direita e na base
+  let creditos = "Desenvolvido por: Julia Forlit, Juliane Santos e Francisco Figueiredo";
+  let creditosX = width - 20; // Margem direita
+  let creditosY = height - 20; // Margem inferior
+  text(creditos, creditosX, creditosY);
+  pop();
+
 // ---------- Tela Instruções (AJUSTADO) ----------
 function drawInstrucoes() {
   //background("#fffacd");
