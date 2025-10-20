@@ -5,10 +5,10 @@ let imagensHistoria = [];
 
 function preloadHistoria() {
   // Carrega as 4 imagens da história
-  imagensHistoria[0] = loadImage('/ImagensFundo/TelaHistoria1.png');
-  imagensHistoria[1] = loadImage('/ImagensFundo/TelaHistoria2.png');
-  imagensHistoria[2] = loadImage('/ImagensFundo/TelaHistoria3.png');
-  imagensHistoria[3] = loadImage('/ImagensFundo/TelaHistoria4.png');
+  imagensHistoria[0] = loadImage('ImagensFundo/TelaHistoria1.png');
+  imagensHistoria[1] = loadImage('ImagensFundo/TelaHistoria2.png');
+  imagensHistoria[2] = loadImage('ImagensFundo/TelaHistoria3.png');
+  imagensHistoria[3] = loadImage('ImagensFundo/TelaHistoria4.png');
 }
 
 function drawHistoria() {
