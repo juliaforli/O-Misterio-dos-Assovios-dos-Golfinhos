@@ -46,6 +46,7 @@ function preload() {
   imagensInstrucoes[3] = loadImage('instrucao_4.png');
   imagensInstrucoes[4] = loadImage('instrucao_5.png');
   imagensInstrucoes[5] = loadImage('instrucao_6.png');
+  imgLogoLab = loadImage("logo_lab.jpg");
   
   grupos = [carregarGrupo1, carregarGrupo2, carregarGrupo3];
   
