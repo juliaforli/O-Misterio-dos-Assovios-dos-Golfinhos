@@ -33,10 +33,10 @@ let imgMenu, imgFundo, imgHistoria;
 
 // ---------- PRELOAD ----------
 function preload() {
-  myFont = loadFont('/fontes/PressStart2P.ttf');
+  myFont = loadFont('fontes/PressStart2P.ttf');
   
-  imgMenu = loadImage('/ImagensFundo/TelaMenu.png');
-  imgFundo = loadImage('/ImagensFundo/TelaFundo.png'); 
+  imgMenu = loadImage('ImagensFundo/TelaMenu.png');
+  imgFundo = loadImage('ImagensFundo/TelaFundo.png'); 
   //imgHistoria = loadImage('/ImagensFundo/TelaHistoria.png');
   
   // instruções (mantém)
