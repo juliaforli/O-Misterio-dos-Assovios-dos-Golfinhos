@@ -46,7 +46,7 @@ function preload() {
   imagensInstrucoes[3] = loadImage('instrucao_4.png');
   imagensInstrucoes[4] = loadImage('instrucao_5.png');
   imagensInstrucoes[5] = loadImage('instrucao_6.png');
-  imgLogoLab = loadImage("logo_lab.jpg");
+  imgLogoLab = loadImage("logo_lab.jpg"); // Modificações de Chico #1
   
   grupos = [carregarGrupo1, carregarGrupo2, carregarGrupo3];
   
@@ -181,6 +181,7 @@ function drawInicio() {
   fill(0); text("Ranking", width/2, y4 + h/2);
 }
 
+// Modificações de Chico #2 (Inicio)
 // Desenhar a Logo no canto inferior esquerdo
   if (imgLogoLab) { // Verifica se a imagem foi carregada
     let logoW = 100; // Largura desejada para a logo
@@ -200,6 +201,7 @@ function drawInicio() {
   let creditosY = height - 20; // Margem inferior
   text(creditos, creditosX, creditosY);
   pop();
+  // Modificações de Chico #2 (Fim)
 
 // ---------- Tela Instruções (AJUSTADO) ----------
 function drawInstrucoes() {
