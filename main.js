@@ -29,7 +29,7 @@ let idUsuario;
 
 var myFont;
 
-let imgMenu, imgFundo, imgHistoria;
+let imgMenu, imgFundo, imgHistoria, imgLogoLab;
 
 // ---------- PRELOAD ----------
 function preload() {
@@ -112,7 +112,6 @@ function setup() {
 
 // ---------- DRAW (Função principal) ----------
 function draw() {
-  // Background condicional para cada tela
   if (telaAtual === "inicio") {
     image(imgMenu, 0, 0, width, height);
   } else if (telaAtual === "historia") {
@@ -121,7 +120,7 @@ function draw() {
   } else if (telaAtual === "jogo") {
     image(imgFundo, 0, 0, width, height);
   } else if (telaAtual === "instrucoes") {
-    image(imgFundo, 0, 0, width, height); // ou imgFundo se preferir
+    image(imgFundo, 0, 0, width, height);
   } else if (telaAtual === "config") {
     image(imgFundo, 0, 0, width, height);
   } else if (telaAtual === "rank") {
