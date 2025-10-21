@@ -144,7 +144,30 @@ function drawInicio() {
   fill(0);
   textSize(20);
   textFont(myFont);
+  image(imgMenu, 0, 0, width, height);
   //text("O Mistério dos Assovios dos Golfinhos", width/2, 80);
+  
+  // Desenhar os Créditos no canto inferior direito
+  push(); // Salva o estado atual (alinhamento, tamanho da fonte)
+  fill(0); // Cor preta para o texto
+  textSize(8); // Tamanho bem pequeno para ser discreto
+  textAlign(RIGHT, BOTTOM); // Alinha à direita e na base
+  let creditos = "Desenvolvido por: Julia Forlit, Juliane Santos e Francisco Figueiredo";
+  let creditosX = width - 20; // Margem direita
+  let creditosY = height - 20; // Margem inferior
+  text(creditos, creditosX, creditosY);
+  pop();
+  // Modificações de Chico #2 (Fim)
+  
+  // Desenhar a Logo no canto inferior esquerdo
+  if (imgLogoLab) { // Verifica se a imagem foi carregada
+    let logoW = 100; // Largura desejada para a logo
+    let logoH = imgLogoLab.height * (logoW / imgLogoLab.width); // Calcula altura proporcional
+    let logoX = 20; // Margem esquerda
+    let logoY = height - logoH - 20; // Margem inferior
+    image(imgLogoLab, logoX, logoY, logoW, logoH);
+  }
+  
   let x = width/2 - 100, w = 200, h = 60, r = 12;
   let y1 = 160;
   if (mouseX > x && mouseX < x + w && mouseY > y1 && mouseY < y1 + h) {
@@ -180,7 +203,12 @@ function drawInicio() {
   fill(0); text("Ranking", width/2, y4 + h/2);
 }
 
+
+
+
+
 // Modificações de Chico #2 (Inicio)
+image(imgMenu, 0, 0, width, height); //Juliane alterou aqui
 // Desenhar a Logo no canto inferior esquerdo
   if (imgLogoLab) { // Verifica se a imagem foi carregada
     let logoW = 100; // Largura desejada para a logo
@@ -190,17 +218,6 @@ function drawInicio() {
     image(imgLogoLab, logoX, logoY, logoW, logoH);
   }
 
-  // Desenhar os Créditos no canto inferior direito
-  push(); // Salva o estado atual (alinhamento, tamanho da fonte)
-  fill(0); // Cor preta para o texto
-  textSize(8); // Tamanho bem pequeno para ser discreto
-  textAlign(RIGHT, BOTTOM); // Alinha à direita e na base
-  let creditos = "Desenvolvido por: Julia Forlit, Juliane Santos e Francisco Figueiredo";
-  let creditosX = width - 20; // Margem direita
-  let creditosY = height - 20; // Margem inferior
-  text(creditos, creditosX, creditosY);
-  pop();
-  // Modificações de Chico #2 (Fim)
 
 // ---------- Tela Instruções (AJUSTADO) ----------
 function drawInstrucoes() {
