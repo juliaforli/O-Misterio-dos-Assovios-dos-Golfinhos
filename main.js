@@ -1,6 +1,6 @@
 let telaAtual = "inicio";
-let usuario = "";
-let inputUsuario, botaoCriarUsuario;
+let usuario, idadeUsuario, escolaridadeUsuario;
+let inputUsuario, inputIdade, inputEscolaridade, botaoCriarUsuario;
 let erroLogin = "";
 
 let cartas = [];
@@ -31,6 +31,10 @@ var myFont;
 
 let imgMenu, imgFundo, imgHistoria, imgLogoLab;
 
+let ranking = [];
+let rankingCarregado = false;
+let rankingErro = false;
+
 // ---------- PRELOAD ----------
 function preload() {
   myFont = loadFont("fontes/PressStart2P.ttf");
@@ -55,20 +59,14 @@ function preload() {
 
 // ---------- SETUP ----------
 function setup() {
-  createCanvas(1325, 600);  // MUDADO PARA 1325x600
+  createCanvas(1325, 600);
   textAlign(CENTER, CENTER);
   
   
   criarCartas();
-  carregarHistoricoLocal(); // Lógica de migração removida
+  carregarHistoricoLocal();
   //setupHistoria();
-  
-  // Gera ID único para o usuário se não existir
-  idUsuario = localStorage.getItem("userID");
-  if (!idUsuario) {
-    idUsuario = "user_" + int(random(1000, 9999));
-    localStorage.setItem("userID", idUsuario);
-  }
+    
   
   // Seleciona aleatoriamente um grupo
   grupoSelecionado = int(random(grupos.length));
@@ -113,19 +111,19 @@ function setup() {
 // ---------- DRAW (Função principal) ----------
 function draw() {
   if (telaAtual === "inicio") {
-    image(imgMenu, 0, 0, width, height);
-  } else if (telaAtual === "historia") {
-    drawHistoria();
-    return;
-  } else if (telaAtual === "jogo") {
-    image(imgFundo, 0, 0, width, height);
-  } else if (telaAtual === "instrucoes") {
-    image(imgFundo, 0, 0, width, height);
-  } else if (telaAtual === "config") {
-    image(imgFundo, 0, 0, width, height);
-  } else if (telaAtual === "rank") {
-    image(imgFundo, 0, 0, width, height);
-  } else if (telaAtual === "fim") {
+    image(imgMenu, 0, 0, width, height);} 
+    else if (telaAtual === "historia") {
+      drawHistoria();
+      return;} 
+    else if (telaAtual === "jogo") {
+      image(imgFundo, 0, 0, width, height);} 
+    else if (telaAtual === "instrucoes") {
+      image(imgFundo, 0, 0, width, height);} 
+    else if (telaAtual === "config") {
+      image(imgFundo, 0, 0, width, height);} 
+    //else if (telaAtual === "rank") {
+      //image(imgFundo, 0, 0, width, height);} 
+    else if (telaAtual === "fim") {
     image(imgFundo, 0, 0, width, height);
   }
   //background("#dff3ff");
@@ -134,7 +132,7 @@ function draw() {
   if(telaAtual === "inicio") drawInicio();
   else if(telaAtual === "jogo") drawJogo();
   else if(telaAtual === "config") drawConfig();
-  else if(telaAtual === "rank") drawRank();
+  //else if(telaAtual === "rank") drawRank();
   else if(telaAtual === "instrucoes") drawInstrucoes();
   else if(telaAtual === "fim") drawTelaFim();
 }
@@ -177,6 +175,7 @@ function drawInicio() {
   }
   rect(x, y1, w, h, r);
   fill(0); textSize(15); text("Iniciar Jogo", width/2, y1 + h/2);
+  
   let y2 = 240;
   if (mouseX > x && mouseX < x + w && mouseY > y2 && mouseY < y2 + h) {
     fill(255, 220, 170); cursor(HAND);
@@ -193,30 +192,17 @@ function drawInicio() {
   }
   rect(x, y3, w, h, r);
   fill(0); text("Configuração", width/2, y3 + h/2);
-  let y4 = 400;
-  if (mouseX > x && mouseX < x + w && mouseY > y4 && mouseY < y4 + h) {
-    fill(220, 255, 200); cursor(HAND);
-  } else {
-    fill(200, 250, 180);
-  }
-  rect(x, y4, w, h, r);
-  fill(0); text("Ranking", width/2, y4 + h/2);
+  
+  //let y4 = 400;
+  //if (mouseX > x && mouseX < x + w && mouseY > y4 && mouseY < y4 + h) {
+    //fill(220, 255, 200); cursor(HAND);
+  //} else {
+    //fill(200, 250, 180);
+  //}
+  //rect(x, y4, w, h, r);
+  //fill(0); text("Ranking", width/2, y4 + h/2);
 }
 
-
-
-
-
-// Modificações de Chico #2 (Inicio)
-image(imgMenu, 0, 0, width, height); //Juliane alterou aqui
-// Desenhar a Logo no canto inferior esquerdo
-  if (imgLogoLab) { // Verifica se a imagem foi carregada
-    let logoW = 100; // Largura desejada para a logo
-    let logoH = imgLogoLab.height * (logoW / imgLogoLab.width); // Calcula altura proporcional
-    let logoX = 20; // Margem esquerda
-    let logoY = height - logoH - 20; // Margem inferior
-    image(imgLogoLab, logoX, logoY, logoW, logoH);
-  }
 
 
 // ---------- Tela Instruções (AJUSTADO) ----------
@@ -289,7 +275,7 @@ function drawInstrucoes() {
   text(`Página ${instrucaoPaginaAtual + 1} de ${totalPaginas}`, width/2, imgY + imgH + 20); 
 }
 
-// ---------- Tela Jogo (Modificada para mostrar erro) ----------
+// ---------- Tela Jogo  ----------
 function drawJogo() {
   // Verifica por 'usuario' (nome)
   if(!usuario) { 
@@ -298,26 +284,36 @@ function drawJogo() {
     textAlign(CENTER, CENTER);
     text("Insira seu nome para começar", width/2, height/2 - 60); 
     textSize(18);
-    text("Seu nome será usado no ranking!", width/2, height/2 - 20); 
+    //text("Seu nome será usado no ranking!", width/2, height/2 - 20); 
 
     if(!inputUsuario) {
       inputUsuario = createInput('');
-      inputUsuario.position(width/2 - 80, height/2 + 20); 
+      inputUsuario.position(width/2 - 80, height/2 + 20);
+      inputUsuario.attribute('placeholder', 'Digite seu nome');
+      
+      // Input da idade
+      inputIdade = createInput('');
+      inputIdade.position(width/2 - 80, height/2+60);
+      inputIdade.attribute('placeholder', 'Digite sua idade');
+      inputIdade.attribute('type', 'number');
+      
+      // Input da idade
+      inputEscolaridade = createInput('');
+      inputEscolaridade.position(width/2 - 80, height/2+100);
+      inputEscolaridade.attribute('placeholder', 'Digite sua escolaridade');
       
       botaoCriarUsuario = createButton('Começar');
       let botaoLargura = botaoCriarUsuario.width;
-      botaoCriarUsuario.position(width/2 - (botaoLargura / 2), height/2 + 60); 
+      botaoCriarUsuario.position(width/2 - (botaoLargura / 2), height/2 + 140); 
       botaoCriarUsuario.mousePressed(criarUsuario);
     }
     
-    // --- NOVO CÓDIGO PARA MOSTRAR ERRO ---
     if (erroLogin !== "") {
       fill(255, 0, 0); // Cor vermelha para o erro
       textSize(16);
       textAlign(CENTER, CENTER);
       text(erroLogin, width/2, height/2 + 100); // Posição abaixo do botão
     }
-    // --- FIM DO NOVO CÓDIGO ---
     
     return;
   }
@@ -329,6 +325,7 @@ function drawJogo() {
   drawProgresso(); 
   drawNavegacao(); 
   drawBotaoSalvar();
+  drawBotaoSemGrupo();
   drawBotaoLimpar(); 
   drawTimer();
   drawBotaoFinalizar();
@@ -365,6 +362,8 @@ function drawTelaFim() {
 // ---------- Criar usuário (Modificada com verificação) ----------
 function criarUsuario() {
   let nome = inputUsuario.value().trim();
+  let idade = inputIdade.value().trim();
+  let escolaridade = inputEscolaridade.value().trim();
   
   // 1. Verifica se o nome está vazio
   if(nome === "") {
@@ -372,17 +371,38 @@ function criarUsuario() {
     return;
   }
   
-  // 2. VERIFICA SE O NOME JÁ EXISTE
-  if (nome in historicoGlobal) {
-    erroLogin = "Este nome já existe. Tente outro.";
+    // 2. Verifica se a idade está vazia ou inválida
+  if(idade === "" || idade < 1) {
+    erroLogin = "Por favor, insira uma idade válida.";
+    return;
+  }
+  
+  // 3. Verifica se selecionou a escolaridade
+  if(escolaridade === "") {
+    erroLogin = "Por favor, digite sua escolaridade.";
+    return;
+  }
+  
+  idUsuario = "player_" + int(random(1000, 9999)) + "_" + Date.now();
+  
+  // 3. Cria chave única combinando nome + ID
+  let chaveUsuario = nome + "#" + idUsuario;
+  
+  // 4. Verifica se esta combinação exata já existe (praticamente impossível)
+  if (chaveUsuario in historicoGlobal) {
+    erroLogin = "Erro ao criar usuário. Tente novamente.";
     return;
   }
   
   // 3. Sucesso!
   erroLogin = ""; // Limpa qualquer erro anterior
-  usuario = nome; // Define o nome global
+  usuario = nome; // Define o nome =
+  idadeUsuario = parseInt(idade);
+  escolaridadeUsuario = escolaridade;
   
   inputUsuario.hide();
+  inputIdade.hide();
+  inputEscolaridade.hide();
   botaoCriarUsuario.hide();
   tempoInicio = millis();
   historico = [];
@@ -496,8 +516,14 @@ function mousePressed() {
         instrucaoPaginaAtual = 0; 
         return; 
       }
-      if(mouseY>320 && mouseY<380){ telaAtual="config"; return; }
-      if(mouseY>400 && mouseY<460){ telaAtual="rank"; return; }
+      if(mouseY>320 && mouseY<380){ 
+        telaAtual="config"; 
+        return; }
+      
+      //if(mouseY>400 && mouseY<460){ 
+        //telaAtual="rank"; 
+        //carregarRankingWebhook(); 
+        //return; }
     }
   }
   
@@ -555,7 +581,28 @@ function mousePressed() {
         return;
       }
     }
+    
+    // REMOVER CARTA DA COMBINAÇÃO ATUAL (clique na miniatura)
+    let yTitulo = 475;
+    let xMini = 250;
+    let yMini = yTitulo + 40;
+    let cardH = 60;
+    let cardW = cardH * (225 / 154);
+    let gap = 10;
 
+    for (let i = 0; i < combinacaoAtual.length; i++) {
+      let x1 = xMini + i * (cardW + gap);
+      let x2 = x1 + cardW;
+      let y1 = yMini;
+      let y2 = y1 + cardH;
+
+      if (mouseX > x1 && mouseX < x2 && mouseY > y1 && mouseY < y2) {
+        combinacaoAtual.splice(i, 1); // 
+        return;
+      }
+    }
+
+    
     if(mouseX>width-180 && mouseX<width-20 && mouseY>height-70 && mouseY<height-20){
       if(combinacaoAtual.length>0){
         for(let id of combinacaoAtual) {
@@ -575,26 +622,58 @@ function mousePressed() {
       combinacaoAtual = []; 
       return;
     }
+    
+    // BOTÃO "SEM GRUPO"
+    if (
+      combinacaoAtual.length > 0 &&
+      mouseX > width - 360 && mouseX < width - 200 &&
+      mouseY > height - 140 && mouseY < height - 90
+    ) {
+      for (let id of combinacaoAtual) {
+        if (!cartasSalvas.includes(id)) {
+          cartasSalvas.push(id);
+        }
+      }
 
+      historico.push({
+        numero: historico.length + 1,
+        semGrupo: true, 
+        cartas: [...combinacaoAtual].map(id => `carta${grupoSelecionado + 1}_${id + 1}`)
+      });
+
+      combinacaoAtual = [];
+      return;
+    }
+
+    
     // FINALIZAR (Modificado para salvar com chave 'usuario')
     if(mouseX > width-180 && mouseX < width-20 && mouseY > height-140 && mouseY < height-90){
-      if(cartasSalvas.length >= cartas.length){
+      if (cartasSalvas.length >= cartas.length) {
         let agora = new Date();
-        
-        // Inicializa o array para o usuário se for a primeira vez
-        if(!historicoGlobal[usuario]) {
+
+        // Cria objeto da partida
+        let partida = {
+          id_usuario: idUsuario,
+          usuario: usuario,
+          idade: idadeUsuario,
+          escolaridade: escolaridadeUsuario,
+          data: agora.toISOString(),
+          tempo_total: tempoJogo,
+          grupo: grupoSelecionado + 1,
+          combinacoes: historico
+        };
+
+        // ENVIA PARA O WEBHOOK 
+        enviarPartidaWebhook(partida);
+
+        // BACKUP LOCAL (opcional)
+        if (!historicoGlobal[usuario]) {
           historicoGlobal[usuario] = [];
         }
-        // Adiciona a partida ao array do usuário
-        historicoGlobal[usuario].push({
-          id_usuario: idUsuario, // Novo campo
-          data: agora.toLocaleDateString(),
-          tempo: tempoJogo,
-          grupo: grupoSelecionado + 1, // Novo campo
-          combinacoes: historico
-        });
-
+        historicoGlobal[usuario].push(partida);
         salvarHistoricoLocal();
+
+        // Finaliza jogo
         jogoFinalizado = true;
         telaAtual = "fim";
       }
@@ -677,7 +756,35 @@ function drawCombinacaoAtual(){
   fill(0); // Volta ao preto para outros textos
   textSize(16);
   
+
 }
+
+// ---------- Botão Sem Grupo         ----------
+function drawBotaoSemGrupo(){
+  if (combinacaoAtual.length > 0) {
+    let x = width - 280;
+    let y = height - 140;
+    let w = 160;
+    let h = 50;
+    let r = 10;
+
+    if (mouseX > x && mouseX < x + w && mouseY > y && mouseY < y + h) {
+      fill(180, 180, 255);
+      cursor(HAND);
+    } else {
+      fill(160, 160, 240);
+    }
+
+    stroke(0);
+    rect(x, y, w, h, r);
+    fill(0);
+    noStroke();
+    textSize(13);
+    textAlign(CENTER, CENTER);
+    text("Carta\nsem grupo", x + w/2, y + h/2);
+  }
+}
+
 // ---------- Botão Limpar Seleção (AJUSTADO) ----------
 function drawBotaoLimpar(){
   if (combinacaoAtual.length > 0) {
@@ -919,68 +1026,110 @@ function mouseClicked(){
   }
 
    
-  if(telaAtual==="rank"){
-    if(mouseX>width/2-100 && mouseX<width/2+100 && mouseY>500 && mouseY<550) {
-      telaAtual="inicio";
-      cliqueBloqueado = true;
-      setTimeout(() => { cliqueBloqueado = false; }, 300);
-    }
-  }
+  //if(telaAtual==="rank"){
+    //if(mouseX>width/2-100 && mouseX<width/2+100 && mouseY>500 && mouseY<550) {
+      //telaAtual="inicio";
+      //cliqueBloqueado = true;
+      //setTimeout(() => { cliqueBloqueado = false; }, 300);
+    //}
+  //}
 }
 
-// ---------- Tela Ranking (AJUSTADO) ----------
+
+
+// ---------- Tela Ranking ----------
 function drawRank(){
-  //background("#fff3c7"); 
-  fill(0); textSize(28); textAlign(CENTER, CENTER);
-  text("🏆 Ranking", width/2,60);
+  fill(0);
+  textAlign(CENTER, CENTER);
+  textSize(28);
+  text("🏆 Ranking", width/2, 60);
+
   textSize(16);
-  
-  let ranking = [];
-  // Loop revertido para a estrutura de nome como chave
-  for(let user in historicoGlobal) {
-    if(Array.isArray(historicoGlobal[user]) && historicoGlobal[user].length > 0) {
-      let melhorTempo = Math.min(...historicoGlobal[user].map(p => p.tempo));
-      ranking.push({usuario: user, tempo: melhorTempo}); // 'user' é o nome
-    }
+
+  // Estado: carregando
+  if (!rankingCarregado) {
+    text("Carregando ranking...", width/2, height/2);
+    return;
   }
-  ranking.sort((a,b) => a.tempo - b.tempo);
-  
+
+  // Estado: erro
+  if (rankingErro) {
+    fill(255, 0, 0);
+    text("Erro ao carregar ranking", width/2, height/2);
+    fill(0);
+  }
+
+  // Estado: ranking vazio
+  if (ranking.length === 0) {
+    text("Nenhuma partida registrada ainda", width/2, height/2);
+  }
+
+  // Exibir ranking
   textAlign(CENTER);
-  for(let i=0; i<ranking.length; i++){
+  for (let i = 0; i < ranking.length; i++) {
     let h = ranking[i];
-    text(`${i+1}. ${h.usuario} - ${h.tempo}s`, width/2, 110+i*30);
+    text(
+      `${i + 1}. ${h.usuario} - ${h.tempo}s`,
+      width / 2,
+      110 + i * 30
+    );
   }
-  
-  let x = width/2-100, y = 500, w = 200, h = 50, r = 12;
-  if (mouseX > x && mouseX < x + w && mouseY > y && mouseY < y + h) {
-    fill(200, 220, 255); cursor(HAND);
+
+  // Botão Voltar
+  let x = width / 2 - 100;
+  let y = 500;
+  let w = 200;
+  let hBtn = 50;
+  let r = 12;
+
+  if (mouseX > x && mouseX < x + w && mouseY > y && mouseY < y + hBtn) {
+    fill(200, 220, 255);
+    cursor(HAND);
   } else {
     fill(180, 200, 250);
   }
-  rect(x, y, w, h, r); 
-  fill(0); noStroke(); textSize(15); text("Voltar", width/2, y + h/2);
+
+  rect(x, y, w, hBtn, r);
+  fill(0);
+  noStroke();
+  textSize(15);
+  text("Voltar", width / 2, y + hBtn / 2);
 }
 
-// ---------- Salvar histórico localmente (sem alteração) ----------
+// ---------- ENVIAR DADOS PARA WEBHOOK  ----------
+function enviarPartidaWebhook(partida) {
+  console.log("🚀 FUNÇÃO DE WEBHOOK CHAMADA", partida);
+  fetch("https://hook.eu2.make.com/crtzs9hb4c3wq4i37m57lbwnhi62wqbu", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify(partida)
+  })
+  .then(() => console.log("Partida enviada com sucesso"))
+  .catch(err => console.error("Erro ao enviar", err));
+}
+
+// ---------- Salvar histórico localmente  ----------
+// BACKUP LOCAL (não é mais a fonte oficial)
 function salvarHistoricoLocal(){
-  localStorage.setItem("historicoJogo", JSON.stringify(historicoGlobal));
+  localStorage.setItem(
+    "historicoJogo_backup",
+    JSON.stringify(historicoGlobal)
+  );
 }
 
-// ---------- Carregar histórico local (Revertido) ----------
+
+// ---------- Carregar histórico local  ----------
 function carregarHistoricoLocal(){
-  let dados = localStorage.getItem("historicoJogo");
-  if(dados) {
+  let dados = localStorage.getItem("historicoJogo_backup");
+  if(dados){
     try {
-      // Simplesmente carrega o que está salvo.
-      // Se estiver no formato de ID, o botão "Resetar" resolve.
       historicoGlobal = JSON.parse(dados);
-    } catch(e) {
+    } catch {
       historicoGlobal = {};
     }
-  } else {
-    historicoGlobal = {};
   }
 }
+
 
 // ---------- Exportar CSV (Revertido) ----------
 function exportarCSVGlobal(){
@@ -1005,3 +1154,5 @@ function exportarCSVGlobal(){
   let a = createA(url,"historico_completo.csv");
   a.attribute("download","historico_completo.csv"); a.hide(); a.elt.click();
 }
+
+
