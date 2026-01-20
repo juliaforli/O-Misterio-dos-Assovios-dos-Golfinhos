@@ -52,7 +52,7 @@ function preload() {
   imagensInstrucoes[5] = loadImage('instrucao_6.png');
   imgLogoLab = loadImage("logo_lab.jpg"); // Modificações de Chico #1
   
-  grupos = [carregarGrupo1, carregarGrupo2, carregarGrupo3];
+  grupos = [carregarGrupo1, carregarGrupo2, carregarGrupo3, carregarGrupo4, carregarGrupo5];
   
   preloadHistoria();
 }
