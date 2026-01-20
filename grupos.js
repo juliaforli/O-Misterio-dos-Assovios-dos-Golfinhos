@@ -3,6 +3,7 @@ let grupo1 = [];
 let grupo2 = [];
 let grupo3 = [];
 let grupo4 = [];
+let grupo5 = [];
 
 // Funções de carregamento
 function carregarGrupo1() {
@@ -106,7 +107,7 @@ function carregarGrupo3() {
   grupo3[29] = loadImage("CartasGrupo3/carta3_30.png");
   return grupo3;
 }
-/*
+
 function carregarGrupo4() {
   grupo4[0] = loadImage("CartasGrupo4/carta4_1.png");
   grupo4[1] = loadImage("CartasGrupo4/carta4_2.png");
@@ -139,4 +140,38 @@ function carregarGrupo4() {
   grupo4[28] = loadImage("CartasGrupo4/carta4_29.png");
   grupo4[29] = loadImage("CartasGrupo4/carta4_30.png");
   return grupo4;
-}*/
+}
+
+function carregarGrupo5() {
+  grupo5[0] = loadImage("CartasGrupo5/carta5_1.png");
+  grupo5[1] = loadImage("CartasGrupo5/carta5_2.png");
+  grupo5[2] = loadImage("CartasGrupo5/carta5_3.png");
+  grupo5[3] = loadImage("CartasGrupo5/carta5_4.png");
+  grupo5[4] = loadImage("CartasGrupo5/carta5_5.png");
+  grupo5[5] = loadImage("CartasGrupo5/carta5_6.png");
+  grupo5[6] = loadImage("CartasGrupo5/carta5_7.png");
+  grupo5[7] = loadImage("CartasGrupo5/carta5_8.png");
+  grupo5[8] = loadImage("CartasGrupo5/carta5_9.png");
+  grupo5[9] = loadImage("CartasGrupo5/carta5_10.png");
+  grupo5[10] = loadImage("CartasGrupo5/carta5_11.png");
+  grupo5[11] = loadImage("CartasGrupo5/carta5_12.png");
+  grupo5[12] = loadImage("CartasGrupo5/carta5_13.png");
+  grupo5[13] = loadImage("CartasGrupo5/carta5_14.png");
+  grupo5[14] = loadImage("CartasGrupo5/carta5_15.png");
+  grupo5[15] = loadImage("CartasGrupo5/carta5_16.png");
+  grupo5[16] = loadImage("CartasGrupo5/carta5_17.png");
+  grupo5[17] = loadImage("CartasGrupo5/carta5_18.png");
+  grupo5[18] = loadImage("CartasGrupo5/carta5_19.png");
+  grupo5[19] = loadImage("CartasGrupo5/carta5_20.png");
+  grupo5[20] = loadImage("CartasGrupo5/carta5_21.png");
+  grupo5[21] = loadImage("CartasGrupo5/carta5_22.png");
+  grupo5[22] = loadImage("CartasGrupo5/carta5_23.png");
+  grupo5[23] = loadImage("CartasGrupo5/carta5_24.png");
+  grupo5[24] = loadImage("CartasGrupo5/carta5_25.png");
+  grupo5[25] = loadImage("CartasGrupo5/carta5_26.png");
+  grupo5[26] = loadImage("CartasGrupo5/carta5_27.png");
+  grupo5[27] = loadImage("CartasGrupo5/carta5_28.png");
+  grupo5[28] = loadImage("CartasGrupo5/carta5_29.png");
+  grupo5[29] = loadImage("CartasGrupo5/carta5_30.png");
+  return grupo5;
+}
