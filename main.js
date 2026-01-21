@@ -55,10 +55,14 @@ let maxScrollY = 0;
 
 // layout do grid (mantém as cartas grandes)
 const GRID_COLUNAS = 3;
-const CARD_W = 225;
-const CARD_H = 154;
-const CARD_GAP_X = 25;
+const CARD_W = 270;
+const CARD_H = 185;
+const CARD_GAP_X = 20;
 const CARD_GAP_Y = 40;
+const PANEL_GAP = 18;        // gap between grid and side panel
+const PANEL_SIDE_PAD = 15;   // right margin for the panel
+const PANEL_W_MIN = 260;     // keep your panel readable
+
 
 // margens dentro da tela do jogo (pra não bater nos textos/botões)
 const GRID_TOP = 100;
@@ -778,7 +782,17 @@ function drawCartasPagina() {
   const colunas = GRID_COLUNAS;
 
   const gridLargura = (colunas * CARD_W) + ((colunas - 1) * CARD_GAP_X);
-  const xInicial = (BASE_W - gridLargura) / 2;
+
+// side panel position (same logic you used in mousePressed)
+const panelX = BASE_W - PANEL_SIDE_PAD - PANEL_W_MIN;
+
+// the grid area is everything from left edge up to the panel gap
+const gridAreaX = 20; // left margin
+const gridAreaW = (panelX - PANEL_GAP) - gridAreaX;
+
+// centre grid inside that area
+const xInicial = gridAreaX + (gridAreaW - gridLargura) / 2;
+
 
   // --- calcula altura total do conteúdo e limite do scroll ---
   const totalLinhas = Math.ceil(cartas.length / colunas);
