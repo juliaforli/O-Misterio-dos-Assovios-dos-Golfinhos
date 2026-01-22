@@ -2047,12 +2047,18 @@ function emailValido(email) {
 }
 
 
-function touchStarted() {
+function touchStarted(event) {
+  // ✅ LOGIN SCREEN (tela jogo, mas ainda sem usuário):
+  // Don't steal the tap — let the browser focus the inputs.
+  if (telaAtual === "jogo" && !usuario) {
+    return true; // allow default behaviour so inputs can be focused
+  }
+
   // On mobile, taps often won't trigger mousePressed().
   // So: if we're NOT in the gameplay scroll area, forward the tap to mousePressed().
   if (telaAtual !== "jogo" || !usuario) {
-    mousePressed();          // use your existing button logic
-    return false;            // prevent browser gesture
+    mousePressed();
+    return false;
   }
 
   const my = scaledMouseY();
@@ -2063,7 +2069,6 @@ function touchStarted() {
   const inScrollArea = (my >= clipTop && my <= BASE_H - clipBottom);
 
   if (!inScrollArea) {
-    // Tap outside scroll area = likely a button / mini panel click
     mousePressed();
     return false;
   }
@@ -2076,6 +2081,7 @@ function touchStarted() {
 
   return false;
 }
+
 
 function touchMoved() {
   if (!isTouchScrolling) return false;
