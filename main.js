@@ -7,6 +7,11 @@ let uiScale = 1;
 let offsetX = 0;
 let offsetY = 0;
 
+let isTouchScrolling = false;
+let lastTouchY = 0;
+let touchStartY = 0;
+let touchStartScrollY = 0;
+
 
 let usuario, idadeUsuario, escolaridadeUsuario;
 let inputUsuario, inputIdade, inputEscolaridade, botaoCriarUsuario;
@@ -1083,7 +1088,10 @@ function mousePressed() {
   }
 }
 
-
+// if the user just dragged to scroll, don't treat it as a click
+if (telaAtual === "jogo" && usuario) {
+  if (isTouchScrolling) return;
+}
     // -----------------------------------------
     // Clique nas cartas (COM SCROLL + CLIP)
     // -----------------------------------------
@@ -2036,5 +2044,57 @@ function enviarEmailPesquisa(email) {
 
 function emailValido(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+
+function touchStarted() {
+  // only allow scroll when actually playing
+  if (telaAtual !== "jogo" || !usuario) return;
+
+  // use BASE coords like the rest of your UI
+  const my = scaledMouseY();
+
+  // only start scrolling if touch begins inside the card scroll area
+  const clipTop = 90;
+  const clipBottom = GRID_BOTTOM_RESERVED;
+
+  const inScrollArea = (my >= clipTop && my <= BASE_H - clipBottom);
+  if (!inScrollArea) return;
+
+  isTouchScrolling = true;
+  lastTouchY = my;
+  touchStartY = my;
+  touchStartScrollY = scrollY;
+
+  return false; // prevents browser gestures
+}
+
+function touchMoved() {
+  if (!isTouchScrolling) return;
+
+  const my = scaledMouseY();
+  const dy = my - lastTouchY;
+
+  // drag up moves content down => subtract dy
+  scrollY = constrain(scrollY - dy, 0, maxScrollY);
+
+  lastTouchY = my;
+  return false; // prevents page scroll
+}
+
+function touchEnded() {
+  if (!isTouchScrolling) return;
+
+  const my = scaledMouseY();
+  const moved = Math.abs(my - touchStartY);
+
+  // if finger moved enough, it was scrolling, not a tap
+  if (moved > 8) {
+    // lock out the next click that mobile sometimes fires after touch
+    cliqueBloqueado = true;
+    setTimeout(() => (cliqueBloqueado = false), 120);
+  }
+
+  isTouchScrolling = false;
 }
 
