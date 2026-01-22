@@ -2048,38 +2048,46 @@ function emailValido(email) {
 
 
 function touchStarted() {
-  // only allow scroll when actually playing
-  if (telaAtual !== "jogo" || !usuario) return;
+  // On mobile, taps often won't trigger mousePressed().
+  // So: if we're NOT in the gameplay scroll area, forward the tap to mousePressed().
+  if (telaAtual !== "jogo" || !usuario) {
+    mousePressed();          // use your existing button logic
+    return false;            // prevent browser gesture
+  }
 
-  // use BASE coords like the rest of your UI
   const my = scaledMouseY();
 
-  // only start scrolling if touch begins inside the card scroll area
+  // Only start scroll if touch begins inside the card scroll region
   const clipTop = 90;
   const clipBottom = GRID_BOTTOM_RESERVED;
-
   const inScrollArea = (my >= clipTop && my <= BASE_H - clipBottom);
-  if (!inScrollArea) return;
 
+  if (!inScrollArea) {
+    // Tap outside scroll area = likely a button / mini panel click
+    mousePressed();
+    return false;
+  }
+
+  // Start scrolling
   isTouchScrolling = true;
   lastTouchY = my;
   touchStartY = my;
   touchStartScrollY = scrollY;
 
-  return false; // prevents browser gestures
+  return false;
 }
 
 function touchMoved() {
-  if (!isTouchScrolling) return;
+  if (!isTouchScrolling) return false;
 
   const my = scaledMouseY();
   const dy = my - lastTouchY;
 
-  // drag up moves content down => subtract dy
+  // drag up => content moves down
   scrollY = constrain(scrollY - dy, 0, maxScrollY);
 
   lastTouchY = my;
-  return false; // prevents page scroll
+  return false; // stop page scrolling
 }
 
 function touchEnded() {
@@ -2088,9 +2096,8 @@ function touchEnded() {
   const my = scaledMouseY();
   const moved = Math.abs(my - touchStartY);
 
-  // if finger moved enough, it was scrolling, not a tap
+  // If it was a real scroll, block the “ghost click” mobile sometimes fires after touch
   if (moved > 8) {
-    // lock out the next click that mobile sometimes fires after touch
     cliqueBloqueado = true;
     setTimeout(() => (cliqueBloqueado = false), 120);
   }
