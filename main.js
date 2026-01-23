@@ -2048,69 +2048,82 @@ function emailValido(email) {
 }
 
 
+// ---------------------------
+// TOUCH SUPPORT (mobile)
+// - Drag inside scroll area = scroll
+// - Tap inside scroll area = select card
+// ---------------------------
 function touchStarted(event) {
-  // ✅ LOGIN SCREEN (tela jogo, mas ainda sem usuário):
-  // Don't steal the tap — let the browser focus the inputs.
+  // ✅ Login screen (tela jogo, mas ainda sem usuário):
+  // Let the browser focus the inputs (DON'T block default).
   if (telaAtual === "jogo" && !usuario) {
-    return true; // allow default behaviour so inputs can be focused
+    return true;
   }
 
-  // On mobile, taps often won't trigger mousePressed().
-  // So: if we're NOT in the gameplay scroll area, forward the tap to mousePressed().
+  // For non-game screens, just reuse your click logic
   if (telaAtual !== "jogo" || !usuario) {
     mousePressed();
     return false;
   }
 
-  const my = scaledMouseY();
+  const my = scaledPointerY();
 
-  // Only start scroll if touch begins inside the card scroll region
+  // Only treat as scroll if touch begins inside the card scroll region
   const clipTop = 90;
   const clipBottom = GRID_BOTTOM_RESERVED;
   const inScrollArea = (my >= clipTop && my <= BASE_H - clipBottom);
 
   if (!inScrollArea) {
+    // Tap on buttons/panel/etc
     mousePressed();
     return false;
   }
 
-  // Start scrolling
+  // Start scrolling (or tap candidate)
   isTouchScrolling = true;
   lastTouchY = my;
   touchStartY = my;
   touchStartScrollY = scrollY;
 
-  return false;
+  return false; // prevent page scroll
 }
-
 
 function touchMoved() {
   if (!isTouchScrolling) return false;
 
-  const my = scaledMouseY();
+  const my = scaledPointerY();
   const dy = my - lastTouchY;
 
   // drag up => content moves down
   scrollY = constrain(scrollY - dy, 0, maxScrollY);
 
   lastTouchY = my;
-  return false; // stop page scrolling
+  return false; // stop browser scrolling
 }
 
 function touchEnded() {
-  if (!isTouchScrolling) return;
+  if (!isTouchScrolling) return false;
 
-  const my = scaledMouseY();
+  const my = scaledPointerY();
   const moved = Math.abs(my - touchStartY);
 
-  // If it was a real scroll, block the “ghost click” mobile sometimes fires after touch
-  if (moved > 8) {
-    cliqueBloqueado = true;
-    setTimeout(() => (cliqueBloqueado = false), 120);
+  // ✅ End scrolling mode FIRST so mousePressed can work
+  isTouchScrolling = false;
+
+  // If it was basically a tap, treat it like a click (select card)
+  const TAP_THRESHOLD = 10; // px in BASE coords (tweak 8–14 if needed)
+  if (moved <= TAP_THRESHOLD) {
+    mousePressed();
+    return false;
   }
 
-  isTouchScrolling = false;
+  // If it was a real scroll, block the “ghost click” some mobiles fire after touch
+  cliqueBloqueado = true;
+  setTimeout(() => (cliqueBloqueado = false), 140);
+
+  return false;
 }
+
 
 function pointerX() {
   // If touching, use touchX; otherwise use mouseX
@@ -2129,7 +2142,3 @@ function scaledPointerY() {
   return (pointerY() - offsetY) / uiScale;
 }
 
-function touchStarted() {
-  mousePressed();   // reuse your existing logic
-  return false;     // prevents the browser from also handling the touch
-}
