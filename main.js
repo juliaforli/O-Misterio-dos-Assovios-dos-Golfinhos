@@ -636,6 +636,7 @@ if (!inputEmail && !emailEnviado) {
   inputEmail.style("border-radius", "8px");
   inputEmail.style("background", "#fff");
   inputEmail.style("box-sizing", "border-box");
+  inputUsuario.style('pointer-events', 'auto');
 
   // IMPORTANT: parent to uiLayer so it scales with the game
   inputEmail.parent(uiLayer);
@@ -920,8 +921,8 @@ function mouseWheel(event) {
 
 // ---------- mousePressed (RESPONSIVO + SCROLL NO JOGO) ----------
 function mousePressed() {
-  const mx = scaledMouseX();
-  const my = scaledMouseY();
+  const mx = scaledPointerX();
+const my = scaledPointerY();
 
   // --------------------------
   // TELA INÍCIO
@@ -2111,3 +2112,24 @@ function touchEnded() {
   isTouchScrolling = false;
 }
 
+function pointerX() {
+  // If touching, use touchX; otherwise use mouseX
+  return (touches && touches.length) ? touches[0].x : mouseX;
+}
+
+function pointerY() {
+  return (touches && touches.length) ? touches[0].y : mouseY;
+}
+
+function scaledPointerX() {
+  return (pointerX() - offsetX) / uiScale;
+}
+
+function scaledPointerY() {
+  return (pointerY() - offsetY) / uiScale;
+}
+
+function touchStarted() {
+  mousePressed();   // reuse your existing logic
+  return false;     // prevents the browser from also handling the touch
+}
